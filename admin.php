@@ -41,7 +41,7 @@ if(isset($_POST['sendXML']) &&  isset($_POST['userDrop'])){
     $_SESSION['userDrop']=$_POST['userDrop'];
     header("Location: xml.php");
 }
-//cambio de jajas
+//cambio de jajas jejejejejejejje
 ?>
 <html>
     <head>
