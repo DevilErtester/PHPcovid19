@@ -7,9 +7,9 @@ session_destroy();
     use PHPMailer\PHPMailer\PHPMailer;
     use PHPMailer\PHPMailer\Exception;
     
-    require '../PHPMailer/src/Exception.php';
-    require '../PHPMailer/src/PHPMailer.php';
-    require '../PHPMailer/src/SMTP.php';
+    require 'libs/PHPMailer/src/Exception.php';
+    require 'libs/PHPMailer/src/PHPMailer.php';
+    require 'libs/PHPMailer/src/SMTP.php';
 
     function envia ($user, $hash) {
         $mail = new PHPMailer();
@@ -97,16 +97,16 @@ session_destroy();
                 }
                 else
                 {
-                    echo "te has equivocado de pass maquina";
+                    echo "te has equivocado de pass crack";
                 }
             }
             // create new user using verification code
             else if(md5($pass)!=$sqlt->pass && !$sqlt->admin && !$sqlt->active)
             {
-                $hashNewUser = hash(crc32,time().rand(0,100000));
+                $hashNewUser = hash('crc32',time().rand(0,100000));
                 if(envia($user,$hashNewUser)){
                 $mysqli->query("INSERT INTO users ( pass, user, hash) VALUES(
-                    '". (hash(md5,$pass)) ."', 
+                    '". (hash('md5',$pass)) ."', 
                     '". ($user) ."', 
                     '". ($hashNewUser) ."') ") or die(mysql_error());
 
@@ -121,10 +121,10 @@ session_destroy();
         }
         else
         {
-            mysqli_close($mysqli);
+            
         }
     
-    mysqli_close($mysqli);
+        mysqli_close($mysqli);
 ?>
 
 <html>
