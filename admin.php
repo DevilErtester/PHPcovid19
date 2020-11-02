@@ -41,6 +41,9 @@ if(isset($_POST['sendXML']) &&  isset($_POST['userDrop'])){
     $_SESSION['userDrop']=$_POST['userDrop'];
     header("Location: xml.php");
 }
+if(isset($_POST['sendPDF'])){
+    header("Location: PDF.php");
+}
 
     if (!$mysqli = mysqli_connect("127.0.0.1", "mario", "1234", "practicaPHP")) 
     {
@@ -109,10 +112,15 @@ if(isset($_POST['sendXML']) &&  isset($_POST['userDrop'])){
             <?php
                 dropdownXML(); 
             ?>
-            <input type="submit" name="sendXML" id="xml" value="crear XML">
-            
+            <input type="submit" name="sendXML" id="xml" value="crear XML">    
         </form>
+        <form action="#" method="post">
+           <label for="sendPDF">Crear un PDF amb resum dels usuaris</label>
+           <input type="submit" name="sendPDF" value=" crear PDF">
+        </form>
+
         <div id="costums" style="width: 600px; height: 300px;"></div>
         <div id="sintomes" style="width: 600px; height: 300px;"></div>
+
     </body>
 </html>
