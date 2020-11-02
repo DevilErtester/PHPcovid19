@@ -56,6 +56,7 @@ if(isset($_POST['sendPDF'])){
     $sqlrCos = $mysqli->query($queryCos);
     $querySin = "SELECT sintoma,count(sinId) as number FROM usersin JOIN sincovid WHERE sinId=idsin group by sintoma";
     $sqlrSin = $mysqli->query($querySin);
+
 ?>
 <html>
     <head>

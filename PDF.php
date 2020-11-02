@@ -36,23 +36,37 @@ require('libs/fpdf/fpdf.php');
         // Page number
         $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
     }
+}   
 
     // Instanciation of inherited class
     $pdf = new PDF();
     $pdf->AliasNbPages();
     $pdf->AddPage();
     $pdf->SetFont('Times','',12);
-    while($row = mysql_fetch_array($result)){
-        //If the current row is the last one, create new page and print column title
+    //fetching user
+    $queryUSER = "SELECT user_id,user,covid FROM user WHERE admin=0";
+    $ResUser = $mysqli->query($queryUSER);
+
+    while($sqlARRusr = $ResUser->fetch_object()){
+        $userID = $sqlARRusr['user_id'];
+        //fetching sintomas
+        $querySIN = "SELECT sintoma FROM usersin JOIN sincovid WHERE sinID=IDsin AND userid='" .$userID. "'";
+    
+        //fetching costums
+        $queryCos = "SELECT costum FROM userscos JOIN coscovid WHERE cosID=IDcost AND userid='" .$userID. "'";
+
+        $covid = $sqlARRusr['covid'];
         if ($i == $max){
             $pdf->AddPage();
 
             //print column titles for the current page
             $pdf->SetY($y_axis_initial);
             $pdf->SetX(25);
-            $pdf->Cell(30,6,'CODE',1,0,'L',1);
-            $pdf->Cell(100,6,'NAME',1,0,'L',1);
-            $pdf->Cell(30,6,'PRICE',1,0,'R',1);
+            $pdf->Cell(30,6,'User',1,0,'L',1);
+            $pdf->Cell(100,6,'Costums',1,0,'L',1);
+            if($covid==1){
+                $pdf->Cell(30,6,'Sintomes',1,0,'R',1);
+            }
             
             //Go to next row
             $y_axis = $y_axis + $row_height;
@@ -61,19 +75,27 @@ require('libs/fpdf/fpdf.php');
             $i = 0;
         }
 
-        $user = $row['Code'];
-        $sin = $row['Price'];
-        $cos = $row['Code'];
-
+        $user = $sqlARRusr['user'];
+        $ResCos = $mysqli->query($queryCos);
+        while($cos = $ResCos->fetch_object()){
+            $costum = $cos->costum;
+        }  
+        if($covid==1){
+            $ResSin = $mysqli->query($querySIN);
+            while($sin = $ResSin->fetch_object()){
+                $sintoma = $sin->sintoma;
+                $pdf->Cell(100,6,$sintoma,1,0,'L',1);
+            }
+        }
         $pdf->SetY($y_axis);
         $pdf->SetX(25);
-        $pdf->Cell(30,6,$code,1,0,'L',1);
-        $pdf->Cell(100,6,$name,1,0,'L',1);
-        $pdf->Cell(30,6,$price,1,0,'R',1);
+        $pdf->Cell(30,6,$user,1,0,'L',1);
+        $pdf->Cell(30,6,$cos,1,0,'R',1);
 
         //Go to next row
         $y_axis = $y_axis + $row_height;
         $i = $i + 1;
     }
     $pdf->Output();
+
 ?>
