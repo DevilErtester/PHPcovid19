@@ -1,13 +1,18 @@
 <?php
 require('libs/fpdf/fpdf.php');
+session_start();
+if ( isset( $_SESSION['admin']) ) {
     
-    if (!$mysqli = mysqli_connect("127.0.0.1", "mario", "1234", "practicaPHP")) 
-    {
-        echo "Error: Unable to connect to MySQL." . PHP_EOL;
-        echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
-        echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
-        exit;
-    }
+    // Grab user data from the database using the user_id
+    // Let them access the "logged in only" pages
+
+} else {
+    
+    header("Location: index.php");
+    exit;
+    // Redirect them to the login page
+}
+
     
     class PDF extends FPDF
     {
@@ -15,7 +20,7 @@ require('libs/fpdf/fpdf.php');
     function Header()
     {
         // Logo
-        // $this->Image('img/logo.png',10,6,30);
+         $this->Image('img/logo.png',10,6,30);
         // Arial bold 15
         $this->SetFont('Arial','B',15);
         // Move to the right
@@ -37,65 +42,57 @@ require('libs/fpdf/fpdf.php');
         $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
     }
 }   
-
+if (!$mysqli = mysqli_connect("127.0.0.1", "mario", "1234", "practicaPHP")) 
+{
+    echo "Error: Unable to connect to MySQL." . PHP_EOL;
+    echo "Debugging errno: " . mysqli_connect_errno() . PHP_EOL;
+    echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
+    exit;
+}
+    
+   
     // Instanciation of inherited class
     $pdf = new PDF();
     $pdf->AliasNbPages();
-    $pdf->AddPage();
     $pdf->SetFont('Times','',12);
-    //fetching user
-    $queryUSER = "SELECT user_id,user,covid FROM user WHERE admin=0";
+    
+    //set initial y axis position per page
+    $y_axis_initial = 25;
+    //print column titles
+    $pdf->SetFillColor(232,232,232);
+    $pdf->SetFont('Arial','B',12);
+    $pdf->SetY($y_axis_initial);
+    $pdf->SetX(25);
+    $y_axis = 0;
+    //Set Row Height
+    $row_height = 6;
+    //initialize counter
+    $i = 0;
+    //Set maximum rows per page
+    $max = 25;
+    $queryUSER = "SELECT user_id,user,covid FROM users WHERE admin=0";
     $ResUser = $mysqli->query($queryUSER);
-
-    while($sqlARRusr = $ResUser->fetch_object()){
+    while( $sqlARRusr = $ResUser->fetch_array()){
+        $pdf->AddPage();
+        $covid = $sqlARRusr['covid'];   
         $userID = $sqlARRusr['user_id'];
         //fetching sintomas
-        $querySIN = "SELECT sintoma FROM usersin JOIN sincovid WHERE sinID=IDsin AND userid='" .$userID. "'";
-    
+        $querySIN = "SELECT sintoma FROM usersin JOIN sincovid WHERE sinId=idSin AND userid='".$userID."'";
+
         //fetching costums
-        $queryCos = "SELECT costum FROM userscos JOIN coscovid WHERE cosID=IDcost AND userid='" .$userID. "'";
-
-        $covid = $sqlARRusr['covid'];
-        if ($i == $max){
-            $pdf->AddPage();
-
-            //print column titles for the current page
-            $pdf->SetY($y_axis_initial);
-            $pdf->SetX(25);
-            $pdf->Cell(30,6,'User',1,0,'L',1);
-            $pdf->Cell(100,6,'Costums',1,0,'L',1);
-            if($covid==1){
-                $pdf->Cell(30,6,'Sintomes',1,0,'R',1);
-            }
-            
-            //Go to next row
-            $y_axis = $y_axis + $row_height;
-            
-            //Set $i variable to 0 (first row)
-            $i = 0;
-        }
-
-        $user = $sqlARRusr['user'];
+        $queryCos = "SELECT costum FROM userscos JOIN coscovid WHERE cosId=idCost AND userid='".$userID."'";
+        
         $ResCos = $mysqli->query($queryCos);
-        while($cos = $ResCos->fetch_object()){
-            $costum = $cos->costum;
-        }  
-        if($covid==1){
-            $ResSin = $mysqli->query($querySIN);
-            while($sin = $ResSin->fetch_object()){
-                $sintoma = $sin->sintoma;
-                $pdf->Cell(100,6,$sintoma,1,0,'L',1);
-            }
+        $pdf->Cell(1,20,'User '.$sqlARRusr['user'],0,1);
+        while($sqlARRcos = $ResCos->fetch_array()){
+            $pdf->Cell(0,10,'Costum:  '.$sqlARRcos['costum'],0,1);
         }
-        $pdf->SetY($y_axis);
-        $pdf->SetX(25);
-        $pdf->Cell(30,6,$user,1,0,'L',1);
-        $pdf->Cell(30,6,$cos,1,0,'R',1);
-
-        //Go to next row
-        $y_axis = $y_axis + $row_height;
-        $i = $i + 1;
+        $ResSin = $mysqli->query($querySIN);
+        while($sqlARRsin = $ResSin->fetch_array()){
+            $pdf->Cell(0,10,'Sintoma:  '.$sqlARRsin['sintoma'],0,1);
+        }
+        
+        
     }
     $pdf->Output();
-
 ?>

@@ -24,7 +24,6 @@ function dropdownXML(){
 
     $query = "SELECT * FROM users";
     $sqlr = $mysqli->query($query);
-    $objectSQLr = $sqlr->fetch_object();
 
     echo "<select name='userDrop' id='userDrop'";
 
