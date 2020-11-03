@@ -77,10 +77,10 @@ if (!$mysqli = mysqli_connect("127.0.0.1", "mario", "1234", "practicaPHP"))
         $covid = $sqlARRusr['covid'];   
         $userID = $sqlARRusr['user_id'];
         //fetching sintomas
-        $querySIN = "SELECT sintoma FROM usersin JOIN sincovid WHERE sinId=idSin AND userid='".$userID."'";
+        $querySIN = "SELECT sintoma FROM userSin JOIN sinCovid WHERE sinId=idSin AND userid='".$userID."'";
 
         //fetching costums
-        $queryCos = "SELECT costum FROM userscos JOIN coscovid WHERE cosId=idCost AND userid='".$userID."'";
+        $queryCos = "SELECT costum FROM usersCos JOIN cosCovid WHERE cosId=idCost AND userid='".$userID."'";
         
         $ResCos = $mysqli->query($queryCos);
         $pdf->Cell(1,20,'User '.$sqlARRusr['user'],0,1);

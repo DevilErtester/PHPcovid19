@@ -51,9 +51,9 @@ if(isset($_POST['sendPDF'])){
         echo "Debugging error: " . mysqli_connect_error() . PHP_EOL;
         exit;
     }
-    $queryCos = "SELECT costum,count(cosId) as number FROM userscos JOIN coscovid WHERE cosId=idCost group by costum";
+    $queryCos = "SELECT costum,count(cosId) as number FROM usersCos JOIN cosCovid WHERE cosId=idCost group by costum";
     $sqlrCos = $mysqli->query($queryCos);
-    $querySin = "SELECT sintoma,count(sinId) as number FROM usersin JOIN sincovid WHERE sinId=idsin group by sintoma";
+    $querySin = "SELECT sintoma,count(sinId) as number FROM userSin JOIN sinCovid WHERE sinId=idsin group by sintoma;";
     $sqlrSin = $mysqli->query($querySin);
 
 ?>
