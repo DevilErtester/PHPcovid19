@@ -39,6 +39,9 @@ function printArray($tabla,$type){
     }
     mysqli_close($mysqli);
 }
+if(isset($_POST['log_out'])){
+    header("Location: index.php");
+}
 if(isset($_POST['send'])){
 
     if(isset($_POST['Covid']) && !empty($_POST['Covid'])){
@@ -90,6 +93,7 @@ mysqli_close($mysqli);
     <body id="user" onload="functionEreaseForm()">
         <div>
             <form action="#" method="post" name="formCovid">
+                <input type="submit" name="log_out" value="Log out">
                 <p>Has passat el covid?</p>
                 <input type="radio" id="y" name="Covid" value="y" onclick="functionDisplayForm(this.value)">
                 <label for="y">Si</label>

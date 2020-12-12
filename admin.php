@@ -30,7 +30,7 @@ function dropdownXML(){
     while($objectSQLr = $sqlr->fetch_object()){
         echo '<option value='. $objectSQLr->user_id .' >'. $objectSQLr->user .'</option>';
     }
-
+    
     echo "</select>";
     mysqli_close($mysqli);
 }
@@ -55,7 +55,9 @@ if(isset($_POST['sendPDF'])){
     $sqlrCos = $mysqli->query($queryCos);
     $querySin = "SELECT sintoma,count(sinId) as number FROM userSin JOIN sinCovid WHERE sinId=idsin group by sintoma;";
     $sqlrSin = $mysqli->query($querySin);
-
+    if(isset($_POST['log_out'])){
+        header("Location: index.php");
+    }
 ?>
 <html>
     <head>
@@ -117,6 +119,7 @@ if(isset($_POST['sendPDF'])){
         <form action="#" method="post">
            <label for="sendPDF">Crear un PDF amb resum dels usuaris</label>
            <input type="submit" name="sendPDF" value=" crear PDF">
+           <input type="submit" name="log_out" value="Log out">
         </form>
 
         <div id="costums" style="width: 600px; height: 300px;"></div>

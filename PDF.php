@@ -84,10 +84,13 @@ if (!$mysqli = mysqli_connect("127.0.0.1", "mario", "1234", "practicaPHP"))
         
         $ResCos = $mysqli->query($queryCos);
         $pdf->Cell(1,20,'User '.$sqlARRusr['user'],0,1);
+        //printing costums
         while($sqlARRcos = $ResCos->fetch_array()){
             $pdf->Cell(0,10,'Costum:  '.$sqlARRcos['costum'],0,1);
         }
+        
         $ResSin = $mysqli->query($querySIN);
+        //printing sintomas
         while($sqlARRsin = $ResSin->fetch_array()){
             $pdf->Cell(0,10,'Sintoma:  '.$sqlARRsin['sintoma'],0,1);
         }

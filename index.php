@@ -33,8 +33,7 @@ session_destroy();
         $mail->IsHTML(true);
         $mail->Subject = "Codi de seguretat";
         $mail->AltBody = "Codi de seguretat";
-        $mail->Body = "Hola, aquest es el teu codi de seguretat, guardal amb 
-        cautela ja que et servira per recuperar el compte si perds la contrasenya: " . $hash . ".";
+        $mail->Body = "Hola, aquest es el teu codi de verificacio, copia'l i enganxa'l a la pagina: " . $hash . ".";
         
         if(!$mail->Send()){
             echo "Mailer Error: " . $mail->ErrorInfo;
@@ -61,7 +60,6 @@ session_destroy();
             $user=$_POST['user'];
             $pass=$_POST['pass'];
        
-            // var_dump($_POST);
             
             $result = $mysqli->query("SELECT * FROM users WHERE user='" . $user . "'");
             $sqlt = $result->fetch_object();
